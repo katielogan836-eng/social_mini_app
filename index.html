@@ -1,546 +1,313 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social</title>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+* {
+  box-sizing: border-box;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1c1e21;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      color: #1c1e21;
-      padding-bottom: 70px;
-    }
+.top {
+  background: white;
+  padding: 18px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1877f2;
+}
 
-    /* TOP BAR */
+.page {
+  display: none;
+  min-height: calc(100vh - 130px);
+  padding-bottom: 80px;
+}
 
-    .topbar {
-      height: 58px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 15px;
-      border-bottom: 1px solid #ddd;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+.page.active {
+  display: block;
+}
 
-    .logo {
-      font-size: 25px;
-      font-weight: bold;
-      color: #1877f2;
-    }
+.card {
+  background: white;
+  margin: 12px 0;
+  padding: 18px;
+  border-radius: 12px;
+}
 
-    .top-icons {
-      display: flex;
-      gap: 10px;
-    }
+.search {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
 
-    .circle {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: none;
-      background: #e4e6eb;
-      font-size: 18px;
-    }
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
 
-    /* CONTENT */
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #1877f2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
 
-    .content {
-      max-width: 600px;
-      margin: auto;
-    }
+.person-info {
+  flex: 1;
+}
 
-    .card {
-      background: white;
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 10px;
-    }
+.person-name {
+  font-weight: bold;
+  font-size: 17px;
+}
 
-    /* CREATE POST */
+button {
+  border: none;
+  border-radius: 7px;
+  padding: 10px 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .create-post {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+.add {
+  background: #1877f2;
+  color: white;
+}
 
-    .profile-small {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #1877f2;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
+.pending {
+  background: #e4e6eb;
+  color: #555;
+}
 
-    .post-input {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 22px;
-      padding: 12px 15px;
-      color: #65676b;
-      background: #f0f2f5;
-    }
+.bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  z-index: 10;
+}
 
-    .post-actions {
-      display: flex;
-      justify-content: space-around;
-      border-top: 1px solid #eee;
-      margin-top: 15px;
-      padding-top: 12px;
-    }
+.nav {
+  flex: 1;
+  border-radius: 0;
+  background: white;
+  color: #555;
+  font-size: 12px;
+}
 
-    .action {
-      border: none;
-      background: none;
-      font-size: 14px;
-      font-weight: bold;
-    }
+.nav span {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 3px;
+}
 
-    /* POST */
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .post-name {
-      font-weight: bold;
-    }
-
-    .post-time {
-      color: #65676b;
-      font-size: 12px;
-    }
-
-    .post-text {
-      margin: 15px 0;
-      line-height: 1.5;
-    }
-
-    .post-buttons {
-      border-top: 1px solid #eee;
-      border-bottom: 1px solid #eee;
-      padding: 8px 0;
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .post-buttons button {
-      border: none;
-      background: none;
-      font-size: 14px;
-      padding: 7px;
-    }
-
-    /* NAVIGATION */
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 65px;
-      background: white;
-      border-top: 1px solid #ddd;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 20;
-    }
-
-    .nav-button {
-      border: none;
-      background: none;
-      font-size: 20px;
-    }
-
-    .nav-label {
-      display: block;
-      font-size: 10px;
-      margin-top: 3px;
-      color: #555;
-    }
-
-    /* SECTIONS */
-
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    h2 {
-      padding: 15px;
-      margin: 0;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 35px 10px;
-      color: #65676b;
-    }
-
-  </style>
+.nav.active {
+  color: #1877f2;
+}
+</style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
+<div class="top">Social</div>
 
-  <header class="topbar">
+<!-- HOME -->
+<div id="home" class="page active">
+  <div class="card">
+    <h2>Welcome 👋</h2>
+    <p>Welcome to your social network.</p>
+  </div>
+</div>
 
-    <div class="logo">
-      Social
-    </div>
+<!-- FRIENDS -->
+<div id="friends" class="page">
+  <div class="card">
+    <h2>Friends 👥</h2>
 
-    <div class="top-icons">
+    <input
+      class="search"
+      id="friendSearch"
+      placeholder="Search people..."
+      oninput="searchFriends()"
+    >
 
-      <button class="circle">
-        🔍
+    <div id="peopleList"></div>
+  </div>
+</div>
+
+<!-- MESSAGES -->
+<div id="messages" class="page">
+  <div class="card">
+    <h2>Messages 💬</h2>
+    <p>Your conversations will appear here.</p>
+  </div>
+</div>
+
+<!-- ALERTS -->
+<div id="alerts" class="page">
+  <div class="card">
+    <h2>Alerts 🔔</h2>
+    <p id="alertText">No new notifications.</p>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="page">
+  <div class="card">
+    <h2>My Profile 👤</h2>
+    <p><b>Name:</b> My Social Profile</p>
+    <p><b>Status:</b> Online</p>
+  </div>
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom">
+
+  <button class="nav active" onclick="openPage('home', this)">
+    <span>🏠</span>
+    Home
+  </button>
+
+  <button class="nav" onclick="openPage('friends', this)">
+    <span>👥</span>
+    Friends
+  </button>
+
+  <button class="nav" onclick="openPage('messages', this)">
+    <span>💬</span>
+    Messages
+  </button>
+
+  <button class="nav" onclick="openPage('alerts', this)">
+    <span>🔔</span>
+    Alerts
+  </button>
+
+  <button class="nav" onclick="openPage('profile', this)">
+    <span>👤</span>
+    Profile
+  </button>
+
+</div>
+
+<script>
+
+const people = [
+  {name: "Alex Johnson", letter: "A"},
+  {name: "Maria Smith", letter: "M"},
+  {name: "Daniel Brown", letter: "D"},
+  {name: "Sophia Williams", letter: "S"},
+  {name: "James Wilson", letter: "J"},
+  {name: "Emma Davis", letter: "E"}
+];
+
+let requests = [];
+
+function openPage(pageId, button) {
+
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  document.getElementById(pageId).classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(nav => {
+    nav.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  if (pageId === "friends") {
+    showPeople(people);
+  }
+}
+
+function showPeople(list) {
+
+  const container = document.getElementById("peopleList");
+
+  container.innerHTML = "";
+
+  list.forEach((person, index) => {
+
+    const div = document.createElement("div");
+    div.className = "person";
+
+    const isPending = requests.includes(index);
+
+    div.innerHTML = `
+      <div class="avatar">${person.letter}</div>
+
+      <div class="person-info">
+        <div class="person-name">${person.name}</div>
+        <small>Social user</small>
+      </div>
+
+      <button
+        class="${isPending ? "pending" : "add"}"
+        onclick="sendRequest(${index})"
+        ${isPending ? "disabled" : ""}
+      >
+        ${isPending ? "Requested" : "Add Friend"}
       </button>
+    `;
 
-      <button class="circle">
-        🔔
-      </button>
+    container.appendChild(div);
+  });
+}
 
-    </div>
+function sendRequest(index) {
 
-  </header>
+  if (!requests.includes(index)) {
+    requests.push(index);
+  }
 
+  document.getElementById("alertText").innerText =
+    "Friend request sent to " + people[index].name + " ✅";
 
-  <!-- MAIN CONTENT -->
+  showPeople(people);
+}
 
-  <main class="content">
+function searchFriends() {
 
+  const text =
+    document.getElementById("friendSearch").value.toLowerCase();
 
-    <!-- HOME -->
+  const results = people.filter(person =>
+    person.name.toLowerCase().includes(text)
+  );
 
-    <section id="home" class="section active">
+  showPeople(results);
+}
 
-      <!-- CREATE POST -->
+showPeople(people);
 
-      <div class="card">
-
-        <div class="create-post">
-
-          <div class="profile-small" id="avatar">
-            ?
-          </div>
-
-          <div
-            class="post-input"
-            onclick="createPost()"
-          >
-            What's on your mind?
-          </div>
-
-        </div>
-
-        <div class="post-actions">
-
-          <button class="action">
-            📷 Photo
-          </button>
-
-          <button class="action">
-            😊 Feeling
-          </button>
-
-          <button class="action">
-            📍 Check in
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- SAMPLE POST -->
-
-      <div class="card">
-
-        <div class="post-header">
-
-          <div class="profile-small">
-            S
-          </div>
-
-          <div>
-
-            <div class="post-name">
-              Social
-            </div>
-
-            <div class="post-time">
-              Just now
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="post-text">
-          Welcome to your new social network! 🎉
-        </div>
-
-        <div class="post-buttons">
-
-          <button onclick="likePost(this)">
-            👍 Like
-          </button>
-
-          <button>
-            💬 Comment
-          </button>
-
-          <button>
-            ↗️ Share
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- FRIENDS -->
-
-    <section id="friends" class="section">
-
-      <h2>👥 Friends</h2>
-
-      <div class="card empty">
-
-        Find people and connect with friends.
-
-      </div>
-
-    </section>
-
-
-    <!-- MESSAGES -->
-
-    <section id="messages" class="section">
-
-      <h2>💬 Messages</h2>
-
-      <div class="card empty">
-
-        Your conversations will appear here.
-
-      </div>
-
-    </section>
-
-
-    <!-- NOTIFICATIONS -->
-
-    <section id="notifications" class="section">
-
-      <h2>🔔 Notifications</h2>
-
-      <div class="card empty">
-
-        Your notifications will appear here.
-
-      </div>
-
-    </section>
-
-
-    <!-- PROFILE -->
-
-    <section id="profile" class="section">
-
-      <h2>👤 Profile</h2>
-
-      <div class="card">
-
-        <div
-          class="profile-small"
-          id="profileAvatar"
-        >
-          ?
-        </div>
-
-        <h3 id="profileName">
-          Telegram User
-        </h3>
-
-        <p id="profileUsername"></p>
-
-        <button onclick="editProfile()">
-          Edit Profile
-        </button>
-
-      </div>
-
-    </section>
-
-
-  </main>
-
-
-  <!-- BOTTOM NAVIGATION -->
-
-  <nav class="bottom-nav">
-
-    <button
-      class="nav-button"
-      onclick="showSection('home')"
-    >
-      🏠
-      <span class="nav-label">Home</span>
-    </button>
-
-    <button
-      class="nav-button"
-      onclick="showSection('friends')"
-    >
-      👥
-      <span class="nav-label">Friends</span>
-    </button>
-
-    <button
-      class="nav-button"
-      onclick="showSection('messages')"
-    >
-      💬
-      <span class="nav-label">Messages</span>
-    </button>
-
-    <button
-      class="nav-button"
-      onclick="showSection('notifications')"
-    >
-      🔔
-      <span class="nav-label">Alerts</span>
-    </button>
-
-    <button
-      class="nav-button"
-      onclick="showSection('profile')"
-    >
-      👤
-      <span class="nav-label">Profile</span>
-    </button>
-
-  </nav>
-
-
-  <script>
-
-    const tg = window.Telegram.WebApp;
-
-    tg.ready();
-    tg.expand();
-
-
-    const user =
-      tg.initDataUnsafe &&
-      tg.initDataUnsafe.user;
-
-
-    if (user) {
-
-      const name =
-        [user.first_name, user.last_name]
-        .filter(Boolean)
-        .join(" ");
-
-      document.getElementById(
-        "profileName"
-      ).textContent = name;
-
-      document.getElementById(
-        "profileUsername"
-      ).textContent =
-        user.username
-        ? "@" + user.username
-        : "";
-
-      const firstLetter =
-        (user.first_name || "U")
-        .charAt(0)
-        .toUpperCase();
-
-      document.getElementById(
-        "avatar"
-      ).textContent = firstLetter;
-
-      document.getElementById(
-        "profileAvatar"
-      ).textContent = firstLetter;
-
-    }
-
-
-    function showSection(id) {
-
-      document
-        .querySelectorAll(".section")
-        .forEach(function(section) {
-
-          section.classList.remove(
-            "active"
-          );
-
-        });
-
-      document
-        .getElementById(id)
-        .classList.add("active");
-
-    }
-
-
-    function createPost() {
-
-      alert(
-        "The post creator will be added next."
-      );
-
-    }
-
-
-    function likePost(button) {
-
-      button.textContent =
-        "❤️ Liked";
-
-    }
-
-
-    function editProfile() {
-
-      alert(
-        "Profile editing will be added next."
-      );
-
-    }
-
-  </script>
+</script>
 
 </body>
 </html>
