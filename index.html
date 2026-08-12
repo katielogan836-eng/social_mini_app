@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Social</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 * {
@@ -18,28 +21,123 @@ body {
 }
 
 .top {
-  background: white;
+  background: #182635;
+  color: white;
   padding: 18px;
-  font-size: 32px;
+  font-size: 22px;
   font-weight: bold;
-  color: #1877f2;
+  text-align: center;
 }
 
 .page {
   display: none;
-  min-height: calc(100vh - 130px);
-  padding-bottom: 80px;
+  min-height: calc(100vh - 145px);
+  padding-bottom: 85px;
 }
 
 .page.active {
   display: block;
 }
 
+.header {
+  background: white;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 34px;
+  font-weight: bold;
+  color: #1877f2;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #e4e6eb;
+  font-size: 25px;
+}
+
 .card {
   background: white;
   margin: 12px 0;
   padding: 18px;
-  border-radius: 12px;
+  border-radius: 14px;
+}
+
+.post-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #1877f2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.mind {
+  flex: 1;
+  background: #f0f2f5;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  padding: 15px;
+  color: #65676b;
+  font-size: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
+  padding-top: 15px;
+}
+
+.action {
+  border: none;
+  background: white;
+  font-size: 16px;
+}
+
+.post-name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.post-time {
+  color: #65676b;
+  margin-top: 4px;
+}
+
+.post-text {
+  font-size: 18px;
+  margin: 22px 0;
+}
+
+.post-actions {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 14px 0;
+  display: flex;
+  justify-content: space-around;
 }
 
 .search {
@@ -48,28 +146,14 @@ body {
   border: 1px solid #ddd;
   border-radius: 25px;
   font-size: 16px;
-  margin-bottom: 15px;
 }
 
 .person {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 0;
+  padding: 15px 0;
   border-bottom: 1px solid #eee;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #1877f2;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
 }
 
 .person-info {
@@ -81,22 +165,64 @@ body {
   font-size: 17px;
 }
 
+.small {
+  color: #65676b;
+  margin-top: 4px;
+}
+
 button {
-  border: none;
-  border-radius: 7px;
-  padding: 10px 14px;
-  font-weight: bold;
   cursor: pointer;
 }
 
 .add {
   background: #1877f2;
   color: white;
+  border: none;
+  padding: 10px 13px;
+  border-radius: 7px;
+  font-weight: bold;
 }
 
-.pending {
+.requested {
   background: #e4e6eb;
   color: #555;
+  border: none;
+  padding: 10px 13px;
+  border-radius: 7px;
+}
+
+.message {
+  padding: 18px;
+  background: white;
+  margin-bottom: 8px;
+  border-radius: 10px;
+}
+
+.notification {
+  padding: 18px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-cover {
+  height: 130px;
+  background: #1877f2;
+  border-radius: 12px 12px 0 0;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: white;
+  border: 5px solid white;
+  margin: -45px auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1877f2;
+  font-size: 35px;
+  font-weight: bold;
 }
 
 .bottom {
@@ -104,17 +230,16 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  height: 75px;
   background: white;
   border-top: 1px solid #ddd;
   display: flex;
-  justify-content: space-around;
-  z-index: 10;
+  z-index: 100;
 }
 
 .nav {
   flex: 1;
-  border-radius: 0;
+  border: none;
   background: white;
   color: #555;
   font-size: 12px;
@@ -122,7 +247,7 @@ button {
 
 .nav span {
   display: block;
-  font-size: 24px;
+  font-size: 25px;
   margin-bottom: 3px;
 }
 
@@ -134,19 +259,68 @@ button {
 
 <body>
 
-<div class="top">Social</div>
+<div class="top">My Social App</div>
+
 
 <!-- HOME -->
 <div id="home" class="page active">
-  <div class="card">
-    <h2>Welcome 👋</h2>
-    <p>Welcome to your social network.</p>
+
+  <div class="header">
+    <div class="logo">Social</div>
+
+    <div class="header-buttons">
+      <button class="circle">🔍</button>
+      <button class="circle">🔔</button>
+    </div>
   </div>
+
+  <div class="card">
+
+    <div class="post-box">
+      <div class="avatar">K</div>
+      <div class="mind">What's on your mind?</div>
+    </div>
+
+    <div class="actions">
+      <button class="action">📷 Photo</button>
+      <button class="action">😊 Feeling</button>
+      <button class="action">📍 Check in</button>
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="post-box">
+      <div class="avatar">S</div>
+
+      <div>
+        <div class="post-name">Social</div>
+        <div class="post-time">Just now</div>
+      </div>
+    </div>
+
+    <div class="post-text">
+      Welcome to your new social network! 🎉
+    </div>
+
+    <div class="post-actions">
+      <button class="action">👍 Like</button>
+      <button class="action">💬 Comment</button>
+      <button class="action">↗️ Share</button>
+    </div>
+
+  </div>
+
 </div>
+
 
 <!-- FRIENDS -->
 <div id="friends" class="page">
+
   <div class="card">
+
     <h2>Friends 👥</h2>
 
     <input
@@ -157,33 +331,92 @@ button {
     >
 
     <div id="peopleList"></div>
+
   </div>
+
 </div>
+
 
 <!-- MESSAGES -->
 <div id="messages" class="page">
+
   <div class="card">
+
     <h2>Messages 💬</h2>
-    <p>Your conversations will appear here.</p>
+
+    <div class="message">
+      <b>Alex Johnson</b>
+      <br>
+      <span class="small">Hello! How are you?</span>
+    </div>
+
+    <div class="message">
+      <b>Maria Smith</b>
+      <br>
+      <span class="small">Nice to meet you 👋</span>
+    </div>
+
+    <div class="message">
+      <b>Daniel Brown</b>
+      <br>
+      <span class="small">Welcome to Social!</span>
+    </div>
+
   </div>
+
 </div>
 
-<!-- ALERTS -->
+
+<!-- NOTIFICATIONS -->
 <div id="alerts" class="page">
+
   <div class="card">
-    <h2>Alerts 🔔</h2>
-    <p id="alertText">No new notifications.</p>
+
+    <h2>Notifications 🔔</h2>
+
+    <div id="notifications">
+
+      <div class="notification">
+        👋 Welcome to Social!
+      </div>
+
+      <div class="notification">
+        🎉 Your account is ready.
+      </div>
+
+    </div>
+
   </div>
+
 </div>
+
 
 <!-- PROFILE -->
 <div id="profile" class="page">
+
   <div class="card">
-    <h2>My Profile 👤</h2>
-    <p><b>Name:</b> My Social Profile</p>
-    <p><b>Status:</b> Online</p>
+
+    <div class="profile-cover"></div>
+
+    <div class="profile-avatar">K</div>
+
+    <center>
+      <h2>My Profile</h2>
+      <p class="small">Social user</p>
+    </center>
+
   </div>
+
+  <div class="card">
+
+    <h3>About me</h3>
+
+    <p>Welcome to my profile.</p>
+
+  </div>
+
 </div>
+
 
 <!-- BOTTOM NAVIGATION -->
 <div class="bottom">
@@ -215,18 +448,20 @@ button {
 
 </div>
 
+
 <script>
 
 const people = [
-  {name: "Alex Johnson", letter: "A"},
-  {name: "Maria Smith", letter: "M"},
-  {name: "Daniel Brown", letter: "D"},
-  {name: "Sophia Williams", letter: "S"},
-  {name: "James Wilson", letter: "J"},
-  {name: "Emma Davis", letter: "E"}
+  {name:"Alex Johnson",letter:"A"},
+  {name:"Maria Smith",letter:"M"},
+  {name:"Daniel Brown",letter:"D"},
+  {name:"Sophia Williams",letter:"S"},
+  {name:"James Wilson",letter:"J"},
+  {name:"Emma Davis",letter:"E"}
 ];
 
 let requests = [];
+
 
 function openPage(pageId, button) {
 
@@ -242,10 +477,11 @@ function openPage(pageId, button) {
 
   button.classList.add("active");
 
-  if (pageId === "friends") {
+  if(pageId === "friends") {
     showPeople(people);
   }
 }
+
 
 function showPeople(list) {
 
@@ -256,47 +492,74 @@ function showPeople(list) {
   list.forEach((person, index) => {
 
     const div = document.createElement("div");
+
     div.className = "person";
 
-    const isPending = requests.includes(index);
+    const pending = requests.includes(index);
 
     div.innerHTML = `
-      <div class="avatar">${person.letter}</div>
+
+      <div class="avatar">
+        ${person.letter}
+      </div>
 
       <div class="person-info">
-        <div class="person-name">${person.name}</div>
-        <small>Social user</small>
+
+        <div class="person-name">
+          ${person.name}
+        </div>
+
+        <div class="small">
+          Social user
+        </div>
+
       </div>
 
       <button
-        class="${isPending ? "pending" : "add"}"
+        class="${pending ? "requested" : "add"}"
         onclick="sendRequest(${index})"
-        ${isPending ? "disabled" : ""}
+        ${pending ? "disabled" : ""}
       >
-        ${isPending ? "Requested" : "Add Friend"}
+
+        ${pending ? "Requested" : "Add Friend"}
+
       </button>
+
     `;
 
     container.appendChild(div);
+
   });
 }
 
+
 function sendRequest(index) {
 
-  if (!requests.includes(index)) {
-    requests.push(index);
-  }
+  if(!requests.includes(index)) {
 
-  document.getElementById("alertText").innerText =
-    "Friend request sent to " + people[index].name + " ✅";
+    requests.push(index);
+
+    document.getElementById("notifications").innerHTML += `
+
+      <div class="notification">
+        👥 Friend request sent to
+        <b>${people[index].name}</b>
+      </div>
+
+    `;
+
+  }
 
   showPeople(people);
 }
 
+
 function searchFriends() {
 
   const text =
-    document.getElementById("friendSearch").value.toLowerCase();
+    document.getElementById("friendSearch")
+    .value
+    .toLowerCase();
 
   const results = people.filter(person =>
     person.name.toLowerCase().includes(text)
@@ -304,6 +567,7 @@ function searchFriends() {
 
   showPeople(results);
 }
+
 
 showPeople(people);
 
