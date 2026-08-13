@@ -10,6 +10,44 @@ const supabase = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+    async function loadTelegramProfile() {
+  const tg = window.Telegram.WebApp;
+
+  tg.ready();
+
+  const user = tg.initDataUnsafe?.user;
+
+  if (!user) {
+    console.log("Telegram user not available");
+    return;
+  }
+
+  const telegramId = String(user.id);
+
+  const profile = {
+    telegram_id: telegramId,
+    username: user.username || "",
+    full_name: [user.first_name, user.last_name]
+      .filter(Boolean)
+      .join(" "),
+    avatar_url: "",
+    bio: ""
+  };
+
+  const { error } = await supabase
+    .from("profiles")
+    .upsert(profile, {
+      onConflict: "telegram_id"
+    });
+
+  if (error) {
+    console.error("Profile error:", error);
+  } else {
+    console.log("Telegram profile connected!");
+  }
+}
+
+loadTelegramProfile();
   </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
