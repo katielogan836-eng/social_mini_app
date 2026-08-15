@@ -24,7 +24,7 @@ const supabase = window.supabase.createClient(
 
   const telegramId = String(user.id);
 
-  const profile = {
+  const Profile = {
     telegram_id: telegramId,
     username: user.username || "",
     full_name: [user.first_name, user.last_name]
